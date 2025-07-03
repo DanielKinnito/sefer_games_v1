@@ -67,7 +67,7 @@ class _AnimatedChoiceButtonState extends State<AnimatedChoiceButton> with Single
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color.fromRGBO(99, 119, 227, 1),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
