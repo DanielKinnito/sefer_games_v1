@@ -32,7 +32,7 @@ class LobbyHomePage extends StatelessWidget {
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
-                      color: Color(0xFF3D155F),
+                      color: Color.fromARGB(255, 17, 0, 255),
                     ),
                   ),
                 ),
