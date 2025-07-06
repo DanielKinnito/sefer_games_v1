@@ -1,84 +1,87 @@
 import 'package:flutter/material.dart';
 import '../widgets/animated_choice_button.dart';
 import '../widgets/animated_background.dart';
+import '../widgets/host_details_card.dart';
+import '../widgets/player_details_card.dart';
+import '../widgets/connection_status.dart';
+import '../widgets/primary_button.dart';
 
-class HostLobbyPage extends StatelessWidget {
+class HostLobbyPage extends StatefulWidget {
   const HostLobbyPage({super.key});
+
+  @override
+  State<HostLobbyPage> createState() => _HostLobbyPageState();
+}
+
+class _HostLobbyPageState extends State<HostLobbyPage> {
+  final TextEditingController _lobbyNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  int _selectedAvatar = 0;
+  bool _connected = true;
+
+  void _onCreatePressed() {
+    // TODO: Implement create logic
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create Lobby pressed')));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Host a Game', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Host Game', style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Stack(
-        children: [
-          const AnimatedBackground(
-            circles: [
-              AnimatedCircle(
-                top: -60,
-                left: -60,
-                diameter: 200,
-                gradient: LinearGradient(
-                  colors: [Color(0xFFB39DDB), Color(0xFF673AB7)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      backgroundColor: const Color(0xFFF5F6FA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              HostDetailsCard(lobbyNameController: _lobbyNameController),
+              const SizedBox(height: 18),
+              PlayerDetailsCard(
+                nameController: _nameController,
+                selectedAvatar: _selectedAvatar,
+                onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
+              ),
+              const SizedBox(height: 18),
+              ConnectionStatus(connected: _connected),
+              const SizedBox(height: 18),
+              PrimaryButton(
+                label: 'Create Lobby',
+                onPressed: _onCreatePressed,
+              ),
+              const SizedBox(height: 12),
+              // Bottom nav (placeholder)
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                  ],
                 ),
-              ),
-              AnimatedCircle(
-                bottom: -40,
-                right: -40,
-                diameter: 120,
-                color: Color(0x4DFFC107),
-              ),
-            ],
-          ),
-          Center(
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-              color: Colors.white.withOpacity(0.95),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Create a New Lobby',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    AnimatedChoiceButton(
-                      label: 'Start Hosting',
-                      icon: Icons.play_circle_fill,
-                      onTap: () {
-                        // TODO: Connect to BLoC to create lobby
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Share the code with friends to join your game!',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                      textAlign: TextAlign.center,
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Icon(Icons.home, color: Colors.blue),
+                    Text('Lobby', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                    Icon(Icons.videogame_asset, color: Colors.grey),
+                    Text('Games', style: TextStyle(color: Colors.grey)),
+                    Icon(Icons.settings, color: Colors.grey),
+                    Text('Settings', style: TextStyle(color: Colors.grey)),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

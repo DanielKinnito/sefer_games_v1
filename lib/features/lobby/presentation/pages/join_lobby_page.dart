@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/animated_choice_button.dart';
-import '../widgets/animated_background.dart';
+import '../widgets/lobby_list.dart';
+import '../widgets/player_details_card.dart';
+import '../widgets/connection_status.dart';
+import '../widgets/primary_button.dart';
 
 class JoinLobbyPage extends StatefulWidget {
   const JoinLobbyPage({super.key});
@@ -9,130 +11,89 @@ class JoinLobbyPage extends StatefulWidget {
   State<JoinLobbyPage> createState() => _JoinLobbyPageState();
 }
 
-class _JoinLobbyPageState extends State<JoinLobbyPage> with SingleTickerProviderStateMixin {
-  final TextEditingController _codeController = TextEditingController();
-  late AnimationController _animationController;
-  late Animation<double> _shakeAnimation;
-  bool _showError = false;
+class _JoinLobbyPageState extends State<JoinLobbyPage> {
+  final TextEditingController _nameController = TextEditingController();
+  int _selectedLobby = 0;
+  int _selectedAvatar = 0;
+  bool _connected = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _shakeAnimation = Tween<double>(begin: 0, end: 16).chain(CurveTween(curve: Curves.elasticIn)).animate(_animationController);
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _codeController.dispose();
-    super.dispose();
-  }
+  final lobbies = [
+    LobbyListItemData(title: "Friends' Game Night", subtitle: 'Host: John • 3/8 Players'),
+    LobbyListItemData(title: 'Family Fun Time', subtitle: 'Host: Jane • 5/6 Players'),
+    LobbyListItemData(title: 'Weekend Warriors', subtitle: 'Host: Mike • 2/4 Players'),
+  ];
 
   void _onJoinPressed() {
-    setState(() {
-      if (_codeController.text.trim().isEmpty) {
-        _showError = true;
-        _animationController.forward(from: 0);
-      } else {
-        _showError = false;
-        // TODO: Attempt to join lobby
-      }
-    });
+    // TODO: Implement join logic
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Join pressed')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Join a Game', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Join Game', style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Stack(
-        children: [
-          const AnimatedBackground(
-            circles: [
-              AnimatedCircle(
-                top: -60,
-                right: -60,
-                diameter: 180,
-                gradient: LinearGradient(
-                  colors: [Color(0xFFFFECB3), Color(0xFFFFC107)],
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
+      backgroundColor: const Color(0xFFF5F6FA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Lobbies
+              LobbyList(
+                lobbies: lobbies,
+                selectedIndex: _selectedLobby,
+                onSelect: (i) => setState(() => _selectedLobby = i),
+              ),
+              const SizedBox(height: 18),
+              // Player details
+              PlayerDetailsCard(
+                nameController: _nameController,
+                selectedAvatar: _selectedAvatar,
+                onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
+              ),
+              const SizedBox(height: 18),
+              // Connection status
+              ConnectionStatus(connected: _connected),
+              const SizedBox(height: 18),
+              // Join button
+              PrimaryButton(
+                label: 'Join Lobby',
+                onPressed: _onJoinPressed,
+              ),
+              const SizedBox(height: 12),
+              // Bottom nav (placeholder)
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                  ],
                 ),
-              ),
-              AnimatedCircle(
-                bottom: -40,
-                left: -40,
-                diameter: 120,
-                color: Color(0x332D155F),
-              ),
-            ],
-          ),
-          Center(
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-              color: Colors.white.withOpacity(0.95),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Enter Lobby Code',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    AnimatedBuilder(
-                      animation: _shakeAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(_showError ? _shakeAnimation.value : 0, 0),
-                          child: child,
-                        );
-                      },
-                      child: TextField(
-                        controller: _codeController,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 22, letterSpacing: 2),
-                        decoration: InputDecoration(
-                          hintText: 'e.g. 1234AB',
-                          errorText: _showError ? 'Please enter a code' : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onSubmitted: (_) => _onJoinPressed(),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    AnimatedChoiceButton(
-                      label: 'Join Lobby',
-                      icon: Icons.login,
-                      onTap: _onJoinPressed,
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Icon(Icons.home, color: Colors.blue),
+                    Text('Lobby', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                    Icon(Icons.videogame_asset, color: Colors.grey),
+                    Text('Games', style: TextStyle(color: Colors.grey)),
+                    Icon(Icons.settings, color: Colors.grey),
+                    Text('Settings', style: TextStyle(color: Colors.grey)),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
