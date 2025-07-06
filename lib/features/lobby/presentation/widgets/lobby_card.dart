@@ -10,7 +10,7 @@ class LobbyCard extends StatelessWidget {
     return Card(
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-      color: Colors.white.withOpacity(0.95),
+      color: Theme.of(context).cardColor.withOpacity(0.98),
       child: Padding(
         padding: padding ?? const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
         child: child,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sefer_games_v1/core/presentation/widgets/bottom_nav_bar.dart';
+
 
 class LobbyPage extends StatelessWidget {
-  const LobbyPage({super.key});
+  final VoidCallback? onToggleTheme;
+  final bool? isDarkMode;
+  const LobbyPage({super.key, this.onToggleTheme, this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +24,14 @@ class LobbyPage extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          if (onToggleTheme != null && isDarkMode != null)
+            IconButton(
+              icon: Icon(isDarkMode! ? Icons.light_mode : Icons.dark_mode, color: Colors.amberAccent, size: 28),
+              onPressed: onToggleTheme,
+              tooltip: isDarkMode! ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            ),
+        ],
       ),
       body: Column(
         children: [
@@ -92,6 +104,13 @@ class LobbyPage extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          // Bottom nav bar
+          BottomNavBar(
+            selectedIndex: 0,
+            onTap: (index) {
+              // TODO: Implement navigation logic for bottom nav bar
+            },
           ),
         ],
       ),

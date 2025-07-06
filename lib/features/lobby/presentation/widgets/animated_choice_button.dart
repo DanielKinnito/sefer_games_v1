@@ -67,18 +67,23 @@ class _AnimatedChoiceButtonState extends State<AnimatedChoiceButton> with Single
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(99, 119, 227, 1),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF23243A)
+                : const Color(0xFF6377E3),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                // ignore: deprecated_member_use
-                color: Colors.deepPurple.withOpacity(0.12),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black.withOpacity(0.4)
+                    : Colors.deepPurple.withOpacity(0.12),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
             ],
             border: Border.all(
-              color: Colors.deepPurple.shade200,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF7C4DFF)
+                  : Colors.deepPurple.shade200,
               width: 2.5,
             ),
           ),
@@ -87,15 +92,23 @@ class _AnimatedChoiceButtonState extends State<AnimatedChoiceButton> with Single
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.icon != null) ...[
-                  Icon(widget.icon, size: 48, color: Colors.deepPurple),
+                  Icon(
+                    widget.icon,
+                    size: 48,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF7C4DFF)
+                        : Colors.deepPurple,
+                  ),
                   const SizedBox(width: 18),
                 ],
                 Text(
                   widget.label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF3D155F),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : const Color(0xFF3D155F),
                     letterSpacing: 1.1,
                   ),
                 ),

@@ -15,26 +15,57 @@ class PlayerDetailsCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
-          child: Text('Your Player Details', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+          child: Text(
+            'Your Player Details',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.onSurfaceVariant
+                  : Colors.black,
+            ),
+          ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
+                : Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.outline.withOpacity(0.18)
+                  : Theme.of(context).dividerColor.withOpacity(0.12),
+            ),
           ),
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Enter your name',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Theme.of(context).colorScheme.outline.withOpacity(0.18)
+                          : Theme.of(context).dividerColor.withOpacity(0.12),
+                    ),
+                  ),
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
+                      : Theme.of(context).cardColor,
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7)
+                        : Colors.grey[600],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -45,13 +76,26 @@ class PlayerDetailsCard extends StatelessWidget {
                   onTap: () => onAvatarSelect(i),
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: selectedAvatar == i ? Colors.blue : Colors.transparent, width: 2),
+                      border: Border.all(
+                        color: selectedAvatar == i
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.transparent,
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.grey.shade100,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.7)
+                          : Theme.of(context).colorScheme.surfaceVariant,
                     ),
                     width: 48,
                     height: 48,
-                    child: Icon(avatars[i], color: selectedAvatar == i ? Colors.blue : Colors.grey, size: 32),
+                    child: Icon(
+                      avatars[i],
+                      color: selectedAvatar == i
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).iconTheme.color?.withOpacity(0.5),
+                      size: 32,
+                    ),
                   ),
                 )),
               ),
