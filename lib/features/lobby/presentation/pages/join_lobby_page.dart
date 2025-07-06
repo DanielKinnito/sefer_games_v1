@@ -15,7 +15,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> {
   final TextEditingController _nameController = TextEditingController();
   int _selectedLobby = 0;
   int _selectedAvatar = 0;
-  bool _connected = true;
+  final bool _connected = true;
 
   final lobbies = [
     LobbyListItemData(title: "Friends' Game Night", subtitle: 'Host: John • 3/8 Players'),

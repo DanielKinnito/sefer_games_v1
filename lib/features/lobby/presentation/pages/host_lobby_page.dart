@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import '../widgets/animated_choice_button.dart';
+// ignore: unused_import
 import '../widgets/animated_background.dart';
 import '../widgets/host_details_card.dart';
 import '../widgets/player_details_card.dart';
@@ -17,7 +19,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
   final TextEditingController _lobbyNameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   int _selectedAvatar = 0;
-  bool _connected = true;
+  final bool _connected = true;
 
   void _onCreatePressed() {
     // TODO: Implement create logic

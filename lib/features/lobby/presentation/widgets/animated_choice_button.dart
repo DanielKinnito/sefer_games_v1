@@ -71,6 +71,7 @@ class _AnimatedChoiceButtonState extends State<AnimatedChoiceButton> with Single
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.deepPurple.withOpacity(0.12),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
