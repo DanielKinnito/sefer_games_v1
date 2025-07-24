@@ -221,11 +221,11 @@ void main() {
 
     group('State Transitions', () {
       test('LobbyCreated state contains correct lobby data', () {
-        const testLobby = LobbyEntity(
+        final testLobby = LobbyEntity(
           id: 'test-id',
           name: 'Test Lobby',
           hostId: 'host-1',
-          players: [],
+          players: const [],
           gameType: 'NumberGuessing',
         );
         
@@ -236,11 +236,11 @@ void main() {
       });
 
       test('LobbyJoined state contains updated lobby', () {
-        const testLobby = LobbyEntity(
+        final testLobby = LobbyEntity(
           id: 'test-id',
           name: 'Test Lobby',
           hostId: 'host-1',
-          players: [],
+          players: const [],
           gameType: 'NumberGuessing',
         );
         
@@ -249,12 +249,12 @@ void main() {
       });
 
       test('LobbyLoaded state contains lobby list', () {
-        const testLobbies = [
+        final testLobbies = [
           LobbyEntity(
             id: 'test-id-1',
             name: 'Test Lobby 1',
             hostId: 'host-1',
-            players: [],
+            players: const [],
             gameType: 'NumberGuessing',
           ),
           LobbyEntity(
@@ -272,11 +272,11 @@ void main() {
       });
 
       test('LobbyHosting state contains host address', () {
-        const testLobby = LobbyEntity(
+        final testLobby = LobbyEntity(
           id: 'test-id',
           name: 'Test Lobby',
           hostId: 'host-1',
-          players: [],
+          players: const [],
           gameType: 'NumberGuessing',
         );
         

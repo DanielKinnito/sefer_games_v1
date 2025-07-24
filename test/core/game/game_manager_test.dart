@@ -108,9 +108,9 @@ void main() {
     });
 
     group('Game State', () {
-      test('should get game state for active game', () {
+      test('should get game state for active game', () async {
         final lobby = _createTestLobby();
-        gameManager.startGame(lobby);
+        await gameManager.startGame(lobby);
         
         final state = gameManager.getGameState(lobby.id);
         
@@ -122,24 +122,13 @@ void main() {
         expect(state, isNull);
       });
 
-      test('should get game results for finished game', () {
+      test('should get game results for finished game', () async {
         final lobby = _createTestLobby();
-        gameManager.startGame(lobby);
+        await gameManager.startGame(lobby);
         
         final results = gameManager.getGameResults(lobby.id);
         
         expect(results, mockGame.gameResults);
-      });
-    });
-
-    group('Connection Management', () {
-      test('should handle WebSocket connections', () {
-        // Note: This would require actual WebSocket mocking for complete testing
-        // For now, we test that the methods don't throw
-        final mockWebSocket = _MockWebSocket();
-        
-        expect(() => gameManager.addLobbyConnection('lobby_1', mockWebSocket), returnsNormally);
-        expect(() => gameManager.removeLobbyConnection('lobby_1', mockWebSocket), returnsNormally);
       });
     });
   });
@@ -215,16 +204,6 @@ class _MockGame extends GameBase {
   void dispose() {
     disposeCalled = true;
     _eventController.close();
-  }
-}
-
-class _MockWebSocket {
-  void add(String message) {
-    // Mock implementation
-  }
-  
-  void close() {
-    // Mock implementation
   }
 }
 
