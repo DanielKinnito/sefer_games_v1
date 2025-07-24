@@ -50,16 +50,17 @@ class LobbyHomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 32),
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
                           decoration: BoxDecoration(
                             color: Theme.of(context).brightness == Brightness.dark
-                                ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.85)
+                                ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.85)
                                 : Colors.deepPurple.shade100.withOpacity(0.85),
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
@@ -72,74 +73,105 @@ class LobbyHomePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Center(
-                            child: Text(
-                              'Sefer Games',
-                              style: TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
-                                color: Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : const Color(0xFF3D155F),
-                                shadows: [
-                                  Shadow(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Colors.black.withOpacity(0.5)
-                                        : Colors.white,
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: Colors.transparent,
+                                  child: Image.asset(
+                                    'assets/logo.png', // Place your logo asset here
+                                    height: 48,
+                                    width: 48,
+                                    fit: BoxFit.contain,
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: Text(
+                                  'Sefer Games',
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.1,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Colors.white
+                                        : const Color(0xFF3D155F),
+                                    shadows: [
+                                      Shadow(
+                                        color: Theme.of(context).brightness == Brightness.dark
+                                            ? Colors.black.withOpacity(0.5)
+                                            : Colors.white,
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      if (onToggleTheme != null && isDarkMode != null)
-                        IconButton(
-                          icon: Icon(isDarkMode! ? Icons.light_mode : Icons.dark_mode, color: Colors.deepPurple, size: 32),
-                          onPressed: onToggleTheme,
-                          tooltip: isDarkMode! ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-                        ),
-                    ],
+                        if (onToggleTheme != null && isDarkMode != null)
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: IconButton(
+                              icon: Icon(isDarkMode! ? Icons.light_mode : Icons.dark_mode, color: Colors.deepPurple, size: 28),
+                              onPressed: onToggleTheme,
+                              tooltip: isDarkMode! ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        AnimatedChoiceButton(
-                          label: 'Host',
-                          icon: Icons.add_circle_outline,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              _animatedRoute(HostLobbyPage(
-                                onToggleTheme: onToggleTheme,
-                                isDarkMode: isDarkMode,
-                              )),
-                            );
-                          },
+                        Expanded(
+                          child: AnimatedChoiceButton(
+                            label: 'Host',
+                            icon: Icons.add_circle_outline,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                _animatedRoute(HostLobbyPage(
+                                  onToggleTheme: onToggleTheme,
+                                  isDarkMode: isDarkMode,
+                                )),
+                              );
+                            },
+                          ),
                         ),
-                        const SizedBox(height: 32),
-                        AnimatedChoiceButton(
-                          label: 'Join',
-                          icon: Icons.group,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              _animatedRoute(JoinLobbyPage(
-                                onToggleTheme: onToggleTheme,
-                                isDarkMode: isDarkMode,
-                              )),
-                            );
-                          },
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: AnimatedChoiceButton(
+                            label: 'Join',
+                            icon: Icons.group,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                _animatedRoute(JoinLobbyPage(
+                                  onToggleTheme: onToggleTheme,
+                                  isDarkMode: isDarkMode,
+                                )),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
                   // Bottom nav bar
-                  const BottomNavBar(selectedIndex: 0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: const BottomNavBar(selectedIndex: 0),
+                    ),
+                  ),
                 ],
               ),
             ),

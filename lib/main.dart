@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/lobby/presentation/pages/lobby_home_page.dart';
+import 'features/splash/presentation/pages/splash_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       themeMode: _themeMode,
-      home: LobbyHomePage(
+      home: SplashPage(
         onToggleTheme: _toggleTheme,
         isDarkMode: _themeMode == ThemeMode.dark,
       ),
