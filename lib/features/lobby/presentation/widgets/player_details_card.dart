@@ -31,7 +31,7 @@ class PlayerDetailsCard extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
+                ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.95)
                 : Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
@@ -59,7 +59,7 @@ class PlayerDetailsCard extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
+                      ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.95)
                       : Theme.of(context).cardColor,
                   hintStyle: TextStyle(
                     color: Theme.of(context).brightness == Brightness.dark
@@ -84,8 +84,8 @@ class PlayerDetailsCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.7)
-                          : Theme.of(context).colorScheme.surfaceVariant,
+                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.7)
+                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     width: 48,
                     height: 48,
