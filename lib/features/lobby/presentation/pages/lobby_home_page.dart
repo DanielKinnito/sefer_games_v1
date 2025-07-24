@@ -14,7 +14,7 @@ class LobbyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Animated background for modern look
@@ -23,15 +23,21 @@ class LobbyHomePage extends StatelessWidget {
               child: Opacity(
                 opacity: 0.18,
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF6377E3),
-                        Color(0xFFB388FF),
-                        Color(0xFFB2FFEA),
-                      ],
+                      colors: Theme.of(context).brightness == Brightness.dark
+                          ? [
+                              const Color(0xFF4A4A5A),
+                              const Color(0xFF2D2D3A),
+                              const Color(0xFF1A1A2E),
+                            ]
+                          : [
+                              const Color(0xFF6377E3),
+                              const Color(0xFFB388FF),
+                              const Color(0xFFB2FFEA),
+                            ],
                     ),
                   ),
                 ),
@@ -52,29 +58,37 @@ class LobbyHomePage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 32),
                           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                           decoration: BoxDecoration(
-                            color: Colors.deepPurple.shade100.withOpacity(0.85),
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.85)
+                                : Colors.deepPurple.shade100.withOpacity(0.85),
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.deepPurple.withOpacity(0.08),
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.black.withOpacity(0.3)
+                                    : Colors.deepPurple.withOpacity(0.08),
                                 blurRadius: 16,
                                 offset: const Offset(0, 8),
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               'Sefer Games',
                               style: TextStyle(
                                 fontSize: 36,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.2,
-                                color: Color(0xFF3D155F),
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : const Color(0xFF3D155F),
                                 shadows: [
                                   Shadow(
-                                    color: Colors.white,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Colors.black.withOpacity(0.5)
+                                        : Colors.white,
                                     blurRadius: 8,
-                                    offset: Offset(0, 2),
+                                    offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
@@ -100,7 +114,10 @@ class LobbyHomePage extends StatelessWidget {
                           icon: Icons.add_circle_outline,
                           onTap: () {
                             Navigator.of(context).push(
-                              _animatedRoute(const HostLobbyPage()),
+                              _animatedRoute(HostLobbyPage(
+                                onToggleTheme: onToggleTheme,
+                                isDarkMode: isDarkMode,
+                              )),
                             );
                           },
                         ),
@@ -110,7 +127,10 @@ class LobbyHomePage extends StatelessWidget {
                           icon: Icons.group,
                           onTap: () {
                             Navigator.of(context).push(
-                              _animatedRoute(const JoinLobbyPage()),
+                              _animatedRoute(JoinLobbyPage(
+                                onToggleTheme: onToggleTheme,
+                                isDarkMode: isDarkMode,
+                              )),
                             );
                           },
                         ),
@@ -119,13 +139,7 @@ class LobbyHomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   // Bottom nav bar
-                  BottomNavBar(
-                    selectedIndex: 0,
-                    onTap: (index) {
-                      // TODO: Implement navigation logic for bottom nav bar
-                      // Example: if (index == 1) Navigator.pushReplacementNamed(context, '/games');
-                    },
-                  ),
+                  const BottomNavBar(selectedIndex: 0),
                 ],
               ),
             ),

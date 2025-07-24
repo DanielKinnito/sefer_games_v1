@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../navigation/navigation_service.dart';
 
 class BottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onTap;
+  final int? selectedIndex;
   const BottomNavBar({
     super.key,
-    required this.selectedIndex,
-    required this.onTap,
+    this.selectedIndex,
   });
 
   @override
@@ -16,6 +15,9 @@ class BottomNavBar extends StatelessWidget {
       _NavBarItem(icon: Icons.videogame_asset, label: 'Games'),
       _NavBarItem(icon: Icons.settings, label: 'Settings'),
     ];
+    
+    final currentIndex = selectedIndex ?? NavigationService.getCurrentIndex(context);
+    
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
@@ -37,9 +39,9 @@ class BottomNavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(items.length, (i) {
-          final selected = i == selectedIndex;
+          final selected = i == currentIndex;
           return GestureDetector(
-            onTap: () => onTap(i),
+            onTap: () => NavigationService.handleBottomNavigation(context, i),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               curve: Curves.easeInOut,

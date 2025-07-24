@@ -34,11 +34,11 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        title: const Text('Host Game', style: TextStyle(color: Colors.black)),
+        title: Text('Host Game', style: TextStyle(color: Theme.of(context).appBarTheme.foregroundColor)),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Theme.of(context).appBarTheme.foregroundColor),
         actions: [
           if (widget.onToggleTheme != null && widget.isDarkMode != null)
             IconButton(
@@ -48,7 +48,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
             ),
         ],
       ),
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -85,19 +85,12 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
               ),
             ),
             // Bottom nav bar always at the bottom
-            BottomNavBar(
-              selectedIndex: 1,
-              onTap: (index) {
-                // TODO: Implement navigation logic for bottom nav bar
-                // Example: if (index == 0) Navigator.pushReplacementNamed(context, '/home');
-              },
-            ),
+            const BottomNavBar(selectedIndex: 1),
           ],
         ),
       ),
     );
   }
-
 }
 
 

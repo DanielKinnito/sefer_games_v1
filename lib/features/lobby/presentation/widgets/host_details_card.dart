@@ -11,7 +11,7 @@ class HostDetailsCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
-            ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.95)
+            ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
             : Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
@@ -49,7 +49,7 @@ class HostDetailsCard extends StatelessWidget {
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               filled: true,
               fillColor: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.95)
+                  ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
                   : Theme.of(context).cardColor,
               hintStyle: TextStyle(
                 color: Theme.of(context).brightness == Brightness.dark

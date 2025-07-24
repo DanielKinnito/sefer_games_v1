@@ -27,7 +27,7 @@ class LobbyList extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.95)
+                ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95)
                 : Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(

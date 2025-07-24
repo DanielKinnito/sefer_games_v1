@@ -10,13 +10,13 @@ class LobbyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF16213E),
-        title: const Text(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Text(
           'Game Lobby',
           style: TextStyle(
-            color: Colors.white,
+            color: Theme.of(context).appBarTheme.foregroundColor,
             fontWeight: FontWeight.bold,
             fontSize: 24,
             letterSpacing: 1.2,
@@ -38,12 +38,12 @@ class LobbyPage extends StatelessWidget {
           // SVG-inspired header (placeholder)
           Container(
             margin: const EdgeInsets.symmetric(vertical: 24),
-            child: Icon(Icons.sports_esports, size: 64, color: Colors.amberAccent),
+            child: Icon(Icons.sports_esports, size: 64, color: Theme.of(context).colorScheme.primary),
           ),
-          const Text(
+          Text(
             'Join a game or create your own!',
             style: TextStyle(
-              color: Colors.white70,
+              color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7),
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -54,22 +54,22 @@ class LobbyPage extends StatelessWidget {
               itemCount: 3, // Placeholder for available lobbies
               itemBuilder: (context, index) {
                 return Card(
-                  color: const Color(0xFF0F3460),
+                  color: Theme.of(context).cardColor,
                   margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.amberAccent,
-                      child: Text('${index + 1}', style: const TextStyle(color: Colors.black)),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Text('${index + 1}', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
                     ),
                     title: Text(
                       'Lobby #${index + 1}',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: const Text('Host: PlayerX | Game: WordBlitz', style: TextStyle(color: Colors.white70)),
+                    subtitle: Text('Host: PlayerX | Game: WordBlitz', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7))),
                     trailing: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amberAccent,
-                        foregroundColor: Colors.black,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: () {},
                       child: const Text('Join'),
@@ -86,8 +86,8 @@ class LobbyPage extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amberAccent,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () {},
                   icon: const Icon(Icons.add),
@@ -95,8 +95,8 @@ class LobbyPage extends StatelessWidget {
                 ),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
                   ),
                   onPressed: () {},
                   icon: const Icon(Icons.refresh),
@@ -106,12 +106,7 @@ class LobbyPage extends StatelessWidget {
             ),
           ),
           // Bottom nav bar
-          BottomNavBar(
-            selectedIndex: 0,
-            onTap: (index) {
-              // TODO: Implement navigation logic for bottom nav bar
-            },
-          ),
+          const BottomNavBar(selectedIndex: 0),
         ],
       ),
     );
