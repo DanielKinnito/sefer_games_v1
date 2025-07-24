@@ -138,13 +138,15 @@ class NumberGuessingGame extends GameBase {
         'newScore': _scores[playerId],
       });
       
-      // Move to next round or end game
+      // Check if this was the last round
       if (_currentRound >= _maxRounds) {
         _gameFinished = true;
         _broadcastEvent('game_finished', gameResults);
       } else {
+        // Move to next round
         _currentRound++;
         _generateNewNumber();
+        _resetForNewRound(); // This will reset the guesser to first player
         _broadcastEvent('round_finished', {
           'round': _currentRound - 1,
           'newRound': _currentRound,
@@ -153,12 +155,13 @@ class NumberGuessingGame extends GameBase {
       }
     } else if (guess < _targetNumber) {
       result = 'too_low';
+      // Move to next player only if guess was wrong
+      _moveToNextGuesser();
     } else {
       result = 'too_high';
+      // Move to next player only if guess was wrong
+      _moveToNextGuesser();
     }
-    
-    // Move to next player
-    _moveToNextGuesser();
     
     _broadcastEvent('guess_made', {
       'playerId': playerId,
@@ -175,7 +178,12 @@ class NumberGuessingGame extends GameBase {
   }
   
   Future<GameActionResult> _handleNextRound(String playerId) async {
-    // Only allow host or current round winner to advance
+    // Check if game is already finished
+    if (_gameFinished) {
+      return GameActionResult.error('Game is already finished');
+    }
+    
+    // Only allow if not at max rounds
     if (_currentRound >= _maxRounds) {
       return GameActionResult.error('Game is already finished');
     }

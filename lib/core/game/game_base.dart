@@ -162,4 +162,9 @@ class GameRegistry {
   static bool isGameTypeSupported(String gameType) {
     return _gameFactories.containsKey(gameType);
   }
+  
+  /// Clear all registered games (for testing only)
+  static void clearRegistry() {
+    _gameFactories.clear();
+  }
 }
