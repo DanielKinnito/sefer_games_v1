@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lobby_list.dart';
 import '../widgets/player_details_card.dart';
 import '../widgets/connection_status.dart';
 import '../widgets/primary_button.dart';
 import 'package:sefer_games_v1/core/presentation/widgets/bottom_nav_bar.dart';
+import '../bloc/lobby_bloc.dart';
+import '../../lobby_di.dart';
 
 
 class JoinLobbyPage extends StatefulWidget {
@@ -20,13 +23,46 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> {
   int _selectedLobby = 0;
   int _selectedAvatar = 0;
   final bool _connected = true;
+  late LobbyBloc _lobbyBloc;
 
-  // Placeholder lobbies removed. Will be populated dynamically in the future.
-  final List<LobbyListItemData> lobbies = [];
+  // Will be populated by BLoC
+  List<LobbyListItemData> lobbies = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _lobbyBloc = LobbyDI.getBloc();
+    _loadLobbies();
+  }
+
+  void _loadLobbies() {
+    _lobbyBloc.add(DiscoverLocalLobbiesEvent());
+  }
 
   void _onJoinPressed() {
-    // TODO: Implement join logic
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Join pressed')));
+    if (_nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your name')),
+      );
+      return;
+    }
+
+    if (lobbies.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No lobbies available to join')),
+      );
+      return;
+    }
+
+    // TODO: Get the actual lobby ID from the selected lobby
+    // For now, use a placeholder
+    final lobbyId = 'lobby_${DateTime.now().millisecondsSinceEpoch}';
+
+    _lobbyBloc.add(JoinLobbyEvent(
+      lobbyId,
+      _nameController.text,
+      'avatar_$_selectedAvatar',
+    ));
   }
 
   @override

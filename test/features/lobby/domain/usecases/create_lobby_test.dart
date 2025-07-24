@@ -8,10 +8,13 @@ void main() {
     final usecase = CreateLobby(repository);
 
     test('should create a lobby', () async {
-      final lobby = await usecase('host1', 'WordBlitz');
-      expect(lobby.hostId, 'host1');
+      final lobby = await usecase('Test Lobby', 'Host1', 'avatar1', 'WordBlitz');
+      expect(lobby.hostId, isNotEmpty);
       expect(lobby.gameType, 'WordBlitz');
-      expect(lobby.playerIds, contains('host1'));
+      expect(lobby.name, 'Test Lobby');
+      expect(lobby.players.length, 1);
+      expect(lobby.players.first.name, 'Host1');
+      expect(lobby.players.first.isHost, true);
     });
   });
 }

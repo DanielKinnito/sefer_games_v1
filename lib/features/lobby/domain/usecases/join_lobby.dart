@@ -5,7 +5,7 @@ class JoinLobby {
   final LobbyRepository repository;
   JoinLobby(this.repository);
 
-  Future<Lobby?> call(String lobbyId, String playerId) {
-    return repository.joinLobby(lobbyId, playerId);
+  Future<Lobby?> call(String lobbyId, String playerName, String playerAvatarId) {
+    return repository.joinLobby(lobbyId, playerName, playerAvatarId);
   }
 }

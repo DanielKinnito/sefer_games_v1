@@ -6,6 +6,8 @@ import 'package:sefer_games_v1/features/lobby/domain/usecases/create_lobby.dart'
 import 'package:sefer_games_v1/features/lobby/domain/usecases/join_lobby.dart';
 import 'package:sefer_games_v1/features/lobby/domain/usecases/get_available_lobbies.dart';
 import 'package:sefer_games_v1/features/lobby/domain/usecases/leave_lobby.dart';
+import 'package:sefer_games_v1/features/lobby/domain/usecases/start_hosting.dart';
+import 'package:sefer_games_v1/features/lobby/domain/usecases/discover_local_lobbies.dart';
 
 void main() {
   group('LobbyBloc', () {
@@ -14,6 +16,8 @@ void main() {
     final joinLobby = JoinLobby(repository);
     final getAvailableLobbies = GetAvailableLobbies(repository);
     final leaveLobby = LeaveLobby(repository);
+    final startHosting = StartHosting(repository);
+    final discoverLocalLobbies = DiscoverLocalLobbies(repository);
     late LobbyBloc bloc;
 
     setUp(() {
@@ -22,14 +26,16 @@ void main() {
         joinLobby: joinLobby,
         getAvailableLobbies: getAvailableLobbies,
         leaveLobby: leaveLobby,
+        startHosting: startHosting,
+        discoverLocalLobbies: discoverLocalLobbies,
       );
     });
 
     blocTest<LobbyBloc, LobbyState>(
-      'emits [LobbyLoading, LobbyJoined] when CreateLobbyEvent is added',
+      'emits [LobbyLoading, LobbyCreated] when CreateLobbyEvent is added',
       build: () => bloc,
-      act: (bloc) => bloc.add(CreateLobbyEvent('host1', 'WordBlitz')),
-      expect: () => [isA<LobbyLoading>(), isA<LobbyJoined>()],
+      act: (bloc) => bloc.add(CreateLobbyEvent('Test Lobby', 'Host1', 'avatar1', 'WordBlitz')),
+      expect: () => [isA<LobbyLoading>(), isA<LobbyCreated>()],
     );
   });
 }

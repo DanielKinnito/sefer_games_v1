@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'features/splash/presentation/pages/splash_page.dart';
+import 'features/games/game_initialization.dart';
 
 void main() {
+  // Initialize available games
+  initializeGames();
+  
   runApp(const MyApp());
 }
 

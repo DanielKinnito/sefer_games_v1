@@ -5,7 +5,7 @@ class CreateLobby {
   final LobbyRepository repository;
   CreateLobby(this.repository);
 
-  Future<Lobby> call(String hostId, String gameType) {
-    return repository.createLobby(hostId, gameType);
+  Future<Lobby> call(String lobbyName, String hostName, String hostAvatarId, String gameType, {int maxPlayers = 8}) {
+    return repository.createLobby(lobbyName, hostName, hostAvatarId, gameType, maxPlayers: maxPlayers);
   }
 }
