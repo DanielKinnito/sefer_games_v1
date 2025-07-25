@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sefer_games_v1/features/games/number_guessing/number_guessing_game.dart';
 import 'package:sefer_games_v1/core/game/game_base.dart';
-import 'dart:async';
 
 void main() {
   group('NumberGuessingGame', () {

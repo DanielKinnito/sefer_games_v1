@@ -7,8 +7,8 @@ class PlayerModel extends PlayerEntity {
     required super.avatarId,
     required super.isHost,
     required super.isConnected,
-    DateTime? joinedAt,
-  }) : super(joinedAt: joinedAt);
+    super.joinedAt,
+  });
 
   factory PlayerModel.fromJson(Map<String, dynamic> json) {
     return PlayerModel(

@@ -25,7 +25,7 @@ class NumberGuessingGame extends GameBase {
   List<String> _players = [];
   int _targetNumber = 0;
   int _currentRound = 1;
-  int _maxRounds = 3;
+  final int _maxRounds = 3;
   bool _gameFinished = false;
   Map<String, int> _scores = {};
   Map<String, int> _lastGuesses = {};

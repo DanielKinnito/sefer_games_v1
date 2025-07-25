@@ -12,6 +12,7 @@ import '../widgets/primary_button.dart';
 import '../bloc/lobby_bloc.dart';
 import '../../lobby_di.dart';
 import '../../../../core/game/game_base.dart';
+import 'host_lobby_info_page.dart';
 
 
 class HostLobbyPage extends StatefulWidget {
@@ -94,8 +95,20 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
                     // Automatically start hosting
                     _lobbyBloc.add(StartHostingEvent(state.lobby.id));
                   } else if (state is LobbyHosting) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Hosting on ${state.hostAddress}')),
+                    // Navigate to host lobby info page
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => HostLobbyInfoPage(
+                          lobbyName: state.lobby.name,
+                          lobbyCode: state.lobby.id,
+                          players: state.lobby.players.map((p) => {
+                            'id': p.id,
+                            'name': p.name,
+                            'avatar': p.avatarId,
+                          }).toList(),
+                          leaderboard: [], // TODO: Populate with real leaderboard data
+                        ),
+                      ),
                     );
                   }
                 },

@@ -10,10 +10,10 @@ class LobbyModel extends LobbyEntity {
     required super.gameType,
     super.status = LobbyStatus.waiting,
     super.maxPlayers = 8,
-    DateTime? createdAt,
+    super.createdAt,
     super.hostAddress,
     super.hostPort,
-  }) : super(createdAt: createdAt);
+  });
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) {
     return LobbyModel(

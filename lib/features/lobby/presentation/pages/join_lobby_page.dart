@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lobby_list.dart';
 import '../widgets/player_details_card.dart';
 import '../widgets/connection_status.dart';
@@ -68,6 +67,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
@@ -85,17 +85,18 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> {
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Main content fills available space above nav bar
-            Expanded(
-              child: Padding(
+            Padding(
+              padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Lobbies (scrollable area, even if empty)
-                    Expanded(
+                    // Lobbies
+                    Container(
+                      constraints: const BoxConstraints(minHeight: 200),
                       child: LobbyList(
                         lobbies: lobbies,
                         selectedIndex: _selectedLobby,
@@ -123,7 +124,10 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> {
               ),
             ),
             // Bottom nav bar always at the bottom
-            const BottomNavBar(selectedIndex: 1),
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: BottomNavBar(selectedIndex: 1),
+            ),
           ],
         ),
       ),
