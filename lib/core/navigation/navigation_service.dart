@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:sefer_games_v1/features/games/presentation/pages/games_page.dart';
 
 class NavigationService {
   static void handleBottomNavigation(BuildContext context, int index) {
+    final currentIndex = getCurrentIndex(context);
+    if (currentIndex == index) return;
+
     switch (index) {
       case 0: // Home
         // Navigate to home and clear the stack
         Navigator.of(context).popUntil((route) => route.isFirst);
         break;
       case 1: // Games
-        // Show coming soon message for now
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Games screen coming soon!')),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const GamesPage(),
+            settings: const RouteSettings(name: '/games'),
+          ),
         );
         break;
       case 2: // Settings
@@ -25,15 +31,14 @@ class NavigationService {
   }
 
   static int getCurrentIndex(BuildContext context) {
-    final currentRoute = ModalRoute.of(context)?.settings.name;
-    
-    // Determine which tab should be selected based on current route
-    if (currentRoute == '/host' || currentRoute == '/join') {
-      return 1; // Games tab for host/join pages
-    } else if (currentRoute == '/settings') {
-      return 2; // Settings tab
-    } else {
-      return 0; // Home tab (default)
+    final currentRouteName = ModalRoute.of(context)?.settings.name;
+
+    if (currentRouteName == '/games') {
+      return 1;
+    } else if (currentRouteName == '/settings') {
+      return 2;
     }
+    // Default to home for any other route, including '/', '/host', '/join'
+    return 0;
   }
 }

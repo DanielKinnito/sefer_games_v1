@@ -42,10 +42,35 @@ dependencies:
   permission_handler: ^11.0.1
   # JSON handling
   json_annotation: ^4.8.1
+  equatable: ^2.0.7
+  palette_generator: ^0.3.3+7
+  flutter_staggered_grid_view: ^0.7.0
+  image: ^4.5.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+  mockito: ^5.5.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/logo.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/logo.png"
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -57,6 +82,7 @@ dev_dependencies:
   # JSON code generation
   build_runner: ^2.4.7
   json_serializable: ^6.7.1
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,6 +100,7 @@ flutter:
     - assets/logo.png
     - assets/logo_transparent.png
     - assets/splash_screen.png
+    - assets/images/
   #   - assets/inspiration/JoinGame.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

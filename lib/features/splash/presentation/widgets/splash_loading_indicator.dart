@@ -25,7 +25,7 @@ class _SplashLoadingIndicatorState extends State<SplashLoadingIndicator>
     super.initState();
     
     _dotsController = AnimationController(
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat();
     
