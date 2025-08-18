@@ -155,10 +155,10 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                     isLoading: isLoading,
                     loadingText: _getLoadingText(state),
                     child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                         Expanded(
                           child: ListView(
                             padding: EdgeInsets.zero,
@@ -225,7 +225,8 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                         ),
                       ],
                     ),
-                  );
+                  ),
+                );
                 },
               ),
             ),

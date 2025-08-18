@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/game/game_base.dart';
+import '../../../../core/game/game_base.dart' as CoreGame;
 import '../../../../core/error/error_handler.dart';
 import '../../../lobby/domain/entities/lobby.dart';
 import '../../../lobby/data/services/lan_service.dart';
@@ -20,7 +20,7 @@ class StartGameSessionEvent extends GameEvent {
 
 class ProcessGameActionEvent extends GameEvent {
   final String playerId;
-  final GameAction action;
+  final CoreGame.GameAction action;
   ProcessGameActionEvent(this.playerId, this.action);
 }
 
@@ -36,8 +36,8 @@ class ReturnToLobbyEvent extends GameEvent {
 
 // Real-time game events
 class GameEventReceivedEvent extends GameEvent {
-  final GameEvent gameEvent;
-  GameEventReceivedEvent(this.gameEvent);
+  final CoreGame.GameEvent coreGameEvent;
+  GameEventReceivedEvent(this.coreGameEvent);
 }
 
 class GameStateUpdateEvent extends GameEvent {
@@ -90,7 +90,7 @@ class GameSessionActive extends GameState {
 
 class GameActionProcessed extends GameState {
   final GameSession session;
-  final GameActionResult result;
+  final CoreGame.GameActionResult result;
   final Map<String, dynamic> updatedGameState;
   
   GameActionProcessed(this.session, this.result, this.updatedGameState);
@@ -183,7 +183,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   // Current game session tracking
   GameSession? _currentSession;
-  GameBase? _currentGame;
+  CoreGame.GameBase? _currentGame;
   
   // Real-time subscriptions
   StreamSubscription? _gameEventSubscription;
@@ -327,7 +327,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       if (_currentSession == null) return;
       
       try {
-        await _handleGameEvent(event.gameEvent, emit);
+        await _handleGameEvent(event.coreGameEvent, emit);
       } catch (e) {
         emit(GameError('Failed to process game event: $e'));
       }
@@ -462,16 +462,16 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   void _subscribeToGameEvents() {
     if (_currentGame == null) return;
     
-    _gameEventSubscription = _currentGame!.gameEvents.listen((gameEvent) {
-      add(GameEventReceivedEvent(gameEvent));
+    _gameEventSubscription = _currentGame!.gameEvents.listen((coreGameEvent) {
+      add(GameEventReceivedEvent(coreGameEvent));
     });
   }
   
   /// Handle incoming game events
-  Future<void> _handleGameEvent(GameEvent gameEvent, Emitter<GameState> emit) async {
+  Future<void> _handleGameEvent(CoreGame.GameEvent coreGameEvent, Emitter<GameState> emit) async {
     if (_currentSession == null || _currentGame == null) return;
     
-    switch (gameEvent.type) {
+    switch (coreGameEvent.type) {
       case 'game_started':
         emit(GameSessionActive(
           _currentSession!, 
@@ -481,16 +481,16 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         break;
         
       case 'player_turn_changed':
-        final currentPlayerId = gameEvent.data['currentPlayer'] as String?;
-        final nextPlayerId = gameEvent.data['nextPlayer'] as String?;
+        final currentPlayerId = coreGameEvent.data['currentPlayer'] as String?;
+        final nextPlayerId = coreGameEvent.data['nextPlayer'] as String?;
         if (currentPlayerId != null) {
           emit(GamePlayerTurnChanged(_currentSession!, currentPlayerId, nextPlayerId));
         }
         break;
         
       case 'round_changed':
-        final currentRound = gameEvent.data['currentRound'] as int? ?? 1;
-        final totalRounds = gameEvent.data['totalRounds'] as int? ?? 1;
+        final currentRound = coreGameEvent.data['currentRound'] as int? ?? 1;
+        final totalRounds = coreGameEvent.data['totalRounds'] as int? ?? 1;
         emit(GameRoundChanged(_currentSession!, currentRound, totalRounds));
         break;
         
@@ -504,7 +504,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         
       default:
         // Generic game state update
-        emit(GameStateUpdated(_currentSession!, _currentGame!.gameState, gameEvent.type));
+        emit(GameStateUpdated(_currentSession!, _currentGame!.gameState, coreGameEvent.type));
     }
   }
   

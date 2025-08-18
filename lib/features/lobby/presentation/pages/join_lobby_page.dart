@@ -13,7 +13,6 @@ import 'package:sefer_games_v1/core/presentation/mixins/error_handler_mixin.dart
 import '../bloc/lobby_bloc.dart';
 import '../../lobby_di.dart';
 
-
 class JoinLobbyPage extends StatefulWidget {
   final VoidCallback? onToggleTheme;
   final bool? isDarkMode;
@@ -58,11 +57,13 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
       return;
     }
 
-    _lobbyBloc.add(JoinLobbyEvent(
-      _selectedLobbyId!,
-      _nameController.text,
-      'avatar_$_selectedAvatar',
-    ));
+    _lobbyBloc.add(
+      JoinLobbyEvent(
+        _selectedLobbyId!,
+        _nameController.text,
+        'avatar_$_selectedAvatar',
+      ),
+    );
   }
 
   String _getLoadingText(LobbyState state) {
@@ -84,9 +85,16 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        title: Text('Join Game', style: TextStyle(color: Theme.of(context).appBarTheme.foregroundColor)),
+        title: Text(
+          'Join Game',
+          style: TextStyle(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
+        ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Theme.of(context).appBarTheme.foregroundColor),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).appBarTheme.foregroundColor,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -95,9 +103,15 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
           ),
           if (widget.onToggleTheme != null && widget.isDarkMode != null)
             IconButton(
-              icon: Icon(widget.isDarkMode! ? Icons.light_mode : Icons.dark_mode, color: Colors.deepPurple, size: 28),
+              icon: Icon(
+                widget.isDarkMode! ? Icons.light_mode : Icons.dark_mode,
+                color: Colors.deepPurple,
+                size: 28,
+              ),
               onPressed: widget.onToggleTheme,
-              tooltip: widget.isDarkMode! ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+              tooltip: widget.isDarkMode!
+                  ? 'Switch to Light Mode'
+                  : 'Switch to Dark Mode',
             ),
         ],
       ),
@@ -106,15 +120,19 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+              padding: const EdgeInsets.only(
+                bottom: kBottomNavigationBarHeight,
+              ),
               child: BlocConsumer<LobbyBloc, LobbyState>(
                 bloc: _lobbyBloc,
                 listener: (context, state) {
                   // Handle errors using the mixin
                   handleLobbyError(state);
-                  
+
                   if (state is LobbyJoined) {
-                    showSuccessMessage('Successfully joined ${state.lobby.name}!');
+                    showSuccessMessage(
+                      'Successfully joined ${state.lobby.name}!',
+                    );
                     // Navigate to lobby waiting room or game
                   } else if (state is NetworkDisconnected) {
                     handleConnectionStatus(false, state.reason);
@@ -124,45 +142,51 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                 },
                 builder: (context, state) {
                   final isLoading = state is LobbyLoading;
-                  
+
                   // Show retry widget for persistent errors
-                  if (state is LobbyError && state.errorType == LobbyErrorType.network) {
+                  if (state is LobbyError &&
+                      state.errorType == LobbyErrorType.network) {
                     return NetworkRetryWidget(
                       onRetry: _loadLobbies,
                       customMessage: state.message,
                     );
                   }
-                  
+
                   return LoadingOverlay(
                     isLoading: isLoading,
                     loadingText: _getLoadingText(state),
                     child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Real-time lobby discovery
-                        RealTimeLobbyDiscovery(
-                          onLobbySelected: _onLobbySelected,
-                          selectedLobbyId: _selectedLobbyId,
-                        ),
-                        const SizedBox(height: 18),
-                        // Player details
-                        PlayerDetailsCard(
-                          nameController: _nameController,
-                          selectedAvatar: _selectedAvatar,
-                          onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
-                        ),
-                        const SizedBox(height: 18),
-                        // Connection status
-                        const ConnectionStatusIndicator(),
-                        const SizedBox(height: 18),
-                        // Join button
-                        PrimaryButton(
-                          label: isLoading ? 'Joining...' : 'Join Lobby',
-                          onPressed: isLoading ? () {} : _onJoinPressed,
-                        ),
-                      ],
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Real-time lobby discovery
+                          RealTimeLobbyDiscovery(
+                            onLobbySelected: _onLobbySelected,
+                            selectedLobbyId: _selectedLobbyId,
+                          ),
+                          const SizedBox(height: 18),
+                          // Player details
+                          PlayerDetailsCard(
+                            nameController: _nameController,
+                            selectedAvatar: _selectedAvatar,
+                            onAvatarSelect: (i) =>
+                                setState(() => _selectedAvatar = i),
+                          ),
+                          const SizedBox(height: 18),
+                          // Connection status
+                          const ConnectionStatusIndicator(),
+                          const SizedBox(height: 18),
+                          // Join button
+                          PrimaryButton(
+                            label: isLoading ? 'Joining...' : 'Join Lobby',
+                            onPressed: isLoading ? () {} : _onJoinPressed,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -179,5 +203,3 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
     );
   }
 }
-
-

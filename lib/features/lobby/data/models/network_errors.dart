@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 /// Network-specific error types for the lobby system
 abstract class NetworkError implements Exception {
   final String message;
