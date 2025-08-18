@@ -85,6 +85,14 @@ class _AnimatedLogoState extends State<AnimatedLogo>
                       ? 'assets/logo_transparent.png'
                       : 'assets/logo.png',
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Return a simple icon if image fails to load
+                    return Icon(
+                      Icons.games,
+                      size: widget.size * 0.6,
+                      color: Colors.white,
+                    );
+                  },
                 ),
               ),
             ),

@@ -167,6 +167,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                           RealTimeLobbyDiscovery(
                             onLobbySelected: _onLobbySelected,
                             selectedLobbyId: _selectedLobbyId,
+                            lobbyBloc: _lobbyBloc,
                           ),
                           const SizedBox(height: 18),
                           // Player details
@@ -178,7 +179,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                           ),
                           const SizedBox(height: 18),
                           // Connection status
-                          const ConnectionStatusIndicator(),
+                          ConnectionStatusIndicator(lobbyBloc: _lobbyBloc),
                           const SizedBox(height: 18),
                           // Join button
                           PrimaryButton(

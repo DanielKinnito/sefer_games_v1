@@ -171,7 +171,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                                 onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
                               ),
                               const SizedBox(height: 18),
-                              ConnectionStatusIndicator(),
+                              ConnectionStatusIndicator(lobbyBloc: _lobbyBloc),
                               const SizedBox(height: 18),
                               if (_isHosting) ...[
                                 Card(
@@ -205,7 +205,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                                 ),
                                 const SizedBox(height: 18),
                                 // Real-time player list
-                                RealTimePlayerList(),
+                                RealTimePlayerList(lobbyBloc: _lobbyBloc),
                                 const SizedBox(height: 18),
                                 // Start Game button (only show when hosting and have enough players)
                                 if (state is LobbyHosting && state.lobby.players.length >= 2)

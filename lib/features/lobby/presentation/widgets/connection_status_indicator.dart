@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/lobby_bloc.dart';
 
 class ConnectionStatusIndicator extends StatelessWidget {
-  const ConnectionStatusIndicator({super.key});
+  final LobbyBloc? lobbyBloc;
+  
+  const ConnectionStatusIndicator({super.key, this.lobbyBloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LobbyBloc, LobbyState>(
+      bloc: lobbyBloc,
       builder: (context, state) {
         bool isConnected = true;
         String? hostAddress;
@@ -104,7 +107,9 @@ class ConnectionStatusIndicator extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         // Trigger retry
-                        context.read<LobbyBloc>().add(RetryLastOperationEvent());
+                        if (lobbyBloc != null) {
+                          lobbyBloc!.add(RetryLastOperationEvent());
+                        }
                       },
                       icon: const Icon(Icons.refresh, size: 16),
                       label: const Text('Retry Connection'),

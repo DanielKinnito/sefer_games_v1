@@ -118,6 +118,28 @@ class _SplashPageState extends State<SplashPage>
               child: Image.asset(
                 SplashConstants.splashBackground,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Return a simple colored background if image fails to load
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: isDarkMode
+                            ? [
+                                const Color(0xFF1A1B2E),
+                                const Color(0xFF16213E),
+                                const Color(0xFF0F3460),
+                              ]
+                            : [
+                                const Color(0xFF667EEA),
+                                const Color(0xFF764BA2),
+                                const Color(0xFF6B73FF),
+                              ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             

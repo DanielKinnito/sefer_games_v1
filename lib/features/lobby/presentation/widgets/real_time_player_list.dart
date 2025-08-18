@@ -4,11 +4,14 @@ import '../bloc/lobby_bloc.dart';
 import '../../domain/entities/player.dart';
 
 class RealTimePlayerList extends StatelessWidget {
-  const RealTimePlayerList({super.key});
+  final LobbyBloc? lobbyBloc;
+  
+  const RealTimePlayerList({super.key, this.lobbyBloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LobbyBloc, LobbyState>(
+      bloc: lobbyBloc,
       builder: (context, state) {
         List<Player> players = [];
         String lobbyName = '';

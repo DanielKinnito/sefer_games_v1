@@ -6,16 +6,19 @@ import '../../domain/entities/lobby.dart';
 class RealTimeLobbyDiscovery extends StatelessWidget {
   final Function(String) onLobbySelected;
   final String? selectedLobbyId;
+  final LobbyBloc? lobbyBloc;
 
   const RealTimeLobbyDiscovery({
     super.key,
     required this.onLobbySelected,
     this.selectedLobbyId,
+    this.lobbyBloc,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LobbyBloc, LobbyState>(
+      bloc: lobbyBloc,
       builder: (context, state) {
         List<Lobby> lobbies = [];
         bool isLoading = false;

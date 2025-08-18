@@ -85,6 +85,13 @@ class LobbyHomePage extends StatelessWidget {
                                     height: 48,
                                     width: 48,
                                     fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.games,
+                                        size: 48,
+                                        color: Theme.of(context).primaryColor,
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
