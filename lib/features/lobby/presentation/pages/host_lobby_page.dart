@@ -5,13 +5,19 @@ import '../widgets/animated_choice_button.dart';
 // ignore: unused_import
 import '../widgets/animated_background.dart';
 import 'package:sefer_games_v1/core/presentation/widgets/bottom_nav_bar.dart';
+import 'package:sefer_games_v1/core/presentation/widgets/loading_overlay.dart';
+import 'package:sefer_games_v1/core/presentation/mixins/error_handler_mixin.dart';
 import '../widgets/host_details_card.dart';
 import '../widgets/player_details_card.dart';
 import '../widgets/connection_status.dart';
 import '../widgets/primary_button.dart';
+import '../widgets/real_time_player_list.dart';
+import '../widgets/connection_status_indicator.dart';
 import '../bloc/lobby_bloc.dart';
 import '../../lobby_di.dart';
+import '../../domain/entities/lobby.dart';
 import '../../../../core/game/game_base.dart';
+import '../../../games/presentation/pages/game_session_page.dart';
 import 'host_lobby_info_page.dart';
 
 
@@ -24,12 +30,12 @@ class HostLobbyPage extends StatefulWidget {
   State<HostLobbyPage> createState() => _HostLobbyPageState();
 }
 
-class _HostLobbyPageState extends State<HostLobbyPage> {
+class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
   final TextEditingController _lobbyNameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   int _selectedAvatar = 0;
-  final bool _connected = true;
   late LobbyBloc _lobbyBloc;
+  bool _isHosting = false;
 
   @override
   void initState() {
@@ -39,9 +45,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
 
   void _onCreatePressed() {
     if (_lobbyNameController.text.isEmpty || _nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
-      );
+      showErrorMessage('Please fill in all fields');
       return;
     }
 
@@ -55,6 +59,44 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
       'avatar_$_selectedAvatar',
       selectedGameType,
     ));
+  }
+
+  String _getLoadingText(LobbyState state) {
+    if (state is LobbyLoading) {
+      // Try to determine what operation is loading based on previous state
+      return 'Creating lobby...';
+    }
+    return 'Loading...';
+  }
+
+  void _startGame(Lobby lobby) async {
+    final shouldStart = await showConfirmationDialog(
+      title: 'Start Game?',
+      message: 'Are you sure you want to start the game with ${lobby.players.length} players?',
+      confirmText: 'Start Game',
+    );
+
+    if (shouldStart) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => GameSessionPage(
+            lobby: lobby,
+            onToggleTheme: widget.onToggleTheme,
+            isDarkMode: widget.isDarkMode,
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  void _retryLobbyOperation() {
+    // Retry the last operation - in this case, try creating the lobby again
+    if (_lobbyNameController.text.isNotEmpty && _nameController.text.isNotEmpty) {
+      _onCreatePressed();
+    } else {
+      showInfoMessage('Please fill in the lobby details and try again');
+    }
   }
 
   @override
@@ -84,38 +126,35 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
               child: BlocConsumer<LobbyBloc, LobbyState>(
                 bloc: _lobbyBloc,
                 listener: (context, state) {
-                  if (state is LobbyError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: ${state.message}')),
-                    );
-                  } else if (state is LobbyCreated) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Lobby "${state.lobby.name}" created successfully!')),
-                    );
+                  // Handle errors using the mixin
+                  handleLobbyError(state);
+                  
+                  if (state is LobbyCreated) {
+                    showSuccessMessage('Lobby "${state.lobby.name}" created successfully!');
                     // Automatically start hosting
                     _lobbyBloc.add(StartHostingEvent(state.lobby.id));
                   } else if (state is LobbyHosting) {
-                    // Navigate to host lobby info page
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => HostLobbyInfoPage(
-                          lobbyName: state.lobby.name,
-                          lobbyCode: state.lobby.id,
-                          players: state.lobby.players.map((p) => {
-                            'id': p.id,
-                            'name': p.name,
-                            'avatar': p.avatarId,
-                          }).toList(),
-                          leaderboard: [], // TODO: Populate with real leaderboard data
-                        ),
-                      ),
-                    );
+                    setState(() {
+                      _isHosting = true;
+                    });
+                    showSuccessMessage('Now hosting on ${state.hostAddress}');
+                  } else if (state is PlayerJoined) {
+                    handlePlayerEvent(state.playerName, true);
+                  } else if (state is PlayerLeft) {
+                    handlePlayerEvent(state.playerName, false);
+                  } else if (state is NetworkDisconnected) {
+                    handleConnectionStatus(false, state.reason);
+                  } else if (state is NetworkConnected) {
+                    handleConnectionStatus(true, null);
                   }
                 },
                 builder: (context, state) {
                   final isLoading = state is LobbyLoading;
                   
-                  return Padding(
+                  return LoadingOverlay(
+                    isLoading: isLoading,
+                    loadingText: _getLoadingText(state),
+                    child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -132,9 +171,9 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
                                 onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
                               ),
                               const SizedBox(height: 18),
-                              ConnectionStatus(connected: _connected),
+                              ConnectionStatusIndicator(),
                               const SizedBox(height: 18),
-                              if (state is LobbyHosting) ...[
+                              if (_isHosting) ...[
                                 Card(
                                   color: Theme.of(context).cardColor,
                                   child: Padding(
@@ -149,25 +188,38 @@ class _HostLobbyPageState extends State<HostLobbyPage> {
                                           color: Theme.of(context).textTheme.bodyLarge?.color,
                                         )),
                                         const SizedBox(height: 8),
-                                        Text('Hosting on: ${state.hostAddress}', style: TextStyle(
-                                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                                        )),
-                                        Text('Game Type: ${state.lobby.gameType}', style: TextStyle(
-                                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                                        )),
-                                        Text('Players: ${state.lobby.players.length}/${state.lobby.maxPlayers}', style: TextStyle(
-                                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                                        )),
+                                        if (state is LobbyHosting) ...[
+                                          Text('Hosting on: ${state.hostAddress}', style: TextStyle(
+                                            color: Theme.of(context).textTheme.bodyMedium?.color,
+                                          )),
+                                          Text('Game Type: ${state.lobby.gameType}', style: TextStyle(
+                                            color: Theme.of(context).textTheme.bodyMedium?.color,
+                                          )),
+                                          Text('Players: ${state.lobby.players.length}/${state.lobby.maxPlayers}', style: TextStyle(
+                                            color: Theme.of(context).textTheme.bodyMedium?.color,
+                                          )),
+                                        ],
                                       ],
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 18),
+                                // Real-time player list
+                                RealTimePlayerList(),
+                                const SizedBox(height: 18),
+                                // Start Game button (only show when hosting and have enough players)
+                                if (state is LobbyHosting && state.lobby.players.length >= 2)
+                                  PrimaryButton(
+                                    label: 'Start Game',
+                                    onPressed: () => _startGame(state.lobby),
+                                  ),
+                                const SizedBox(height: 18),
                               ],
-                              PrimaryButton(
-                                label: isLoading ? 'Creating...' : 'Create Lobby',
-                                onPressed: isLoading ? () {} : _onCreatePressed,
-                              ),
+                              if (!_isHosting)
+                                PrimaryButton(
+                                  label: isLoading ? 'Creating...' : 'Create Lobby',
+                                  onPressed: isLoading ? () {} : _onCreatePressed,
+                                ),
                             ],
                           ),
                         ),
