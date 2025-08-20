@@ -1,4 +1,3 @@
-import '../entities/game_session.dart';
 import '../repositories/game_session_repository.dart';
 
 class EndGameSession {

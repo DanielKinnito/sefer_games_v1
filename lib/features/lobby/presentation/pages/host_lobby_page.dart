@@ -9,7 +9,6 @@ import 'package:sefer_games_v1/core/presentation/widgets/loading_overlay.dart';
 import 'package:sefer_games_v1/core/presentation/mixins/error_handler_mixin.dart';
 import '../widgets/host_details_card.dart';
 import '../widgets/player_details_card.dart';
-import '../widgets/connection_status.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/real_time_player_list.dart';
 import '../widgets/connection_status_indicator.dart';
@@ -18,7 +17,6 @@ import '../../lobby_di.dart';
 import '../../domain/entities/lobby.dart';
 import '../../../../core/game/game_base.dart';
 import '../../../games/presentation/pages/game_session_page.dart';
-import 'host_lobby_info_page.dart';
 
 
 class HostLobbyPage extends StatefulWidget {

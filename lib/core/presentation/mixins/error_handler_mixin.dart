@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/error_dialog.dart';
-import '../../error/error_handler.dart';
 import '../../../features/lobby/presentation/bloc/lobby_bloc.dart';
 import '../../../features/games/presentation/bloc/game_bloc.dart';
 

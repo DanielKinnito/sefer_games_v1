@@ -7,9 +7,6 @@ import '../../../lobby/presentation/pages/lobby_home_page.dart';
 import '../bloc/game_bloc.dart';
 import '../widgets/game_ui_container.dart';
 import '../widgets/game_header.dart';
-import '../widgets/game_player_list.dart';
-import '../widgets/game_action_panel.dart';
-import '../../domain/entities/game_session.dart';
 
 class GameSessionPage extends StatefulWidget {
   final Lobby lobby;

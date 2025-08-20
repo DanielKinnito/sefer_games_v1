@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/lobby_list.dart';
 import '../widgets/player_details_card.dart';
-import '../widgets/connection_status.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/connection_status_indicator.dart';
 import '../widgets/real_time_lobby_discovery.dart';
