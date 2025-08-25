@@ -19,8 +19,16 @@ class CreateLobbyEvent extends LobbyEvent {
   final String hostAvatarId;
   final String gameType;
   final int maxPlayers;
+  final Map<String, dynamic>? gameConfig;
   
-  CreateLobbyEvent(this.lobbyName, this.hostName, this.hostAvatarId, this.gameType, {this.maxPlayers = 8});
+  CreateLobbyEvent(
+    this.lobbyName, 
+    this.hostName, 
+    this.hostAvatarId, 
+    this.gameType, {
+    this.maxPlayers = 8,
+    this.gameConfig,
+  });
 }
 
 class JoinLobbyEvent extends LobbyEvent {

@@ -1080,4 +1080,46 @@ class LanService {
     _cachedLocalIP = null;
     _reconnectAttempts = 0;
   }
+
+  /// Broadcast a message to all connected clients (host only)
+  Future<void> broadcastMessage(NetworkMessage message) async {
+    if (_connectedClients.isEmpty) {
+      print('No connected clients to broadcast to');
+      return;
+    }
+
+    final messageJson = json.encode(message.toJson());
+    final clientsToRemove = <String>[];
+
+    for (final entry in _connectedClients.entries) {
+      try {
+        entry.value.add(messageJson);
+      } catch (e) {
+        print('Failed to send message to client ${entry.key}: $e');
+        clientsToRemove.add(entry.key);
+      }
+    }
+
+    // Remove disconnected clients
+    for (final clientId in clientsToRemove) {
+      _connectedClients.remove(clientId);
+    }
+  }
+
+  /// Send a message to the host (client only)
+  Future<void> sendMessage(NetworkMessage message) async {
+    if (_clientWebSocket == null) {
+      print('Not connected to host, queueing message: ${message.type}');
+      _messageQueue.add(message);
+      return;
+    }
+
+    try {
+      final messageJson = json.encode(message.toJson());
+      _clientWebSocket!.add(messageJson);
+    } catch (e) {
+      print('Failed to send message to host: $e');
+      _messageQueue.add(message);
+    }
+  }
 }

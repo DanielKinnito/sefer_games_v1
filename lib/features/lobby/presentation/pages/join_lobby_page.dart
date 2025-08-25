@@ -9,7 +9,7 @@ import 'package:sefer_games_v1/core/presentation/widgets/loading_overlay.dart';
 import 'package:sefer_games_v1/core/presentation/widgets/retry_widget.dart';
 import 'package:sefer_games_v1/core/presentation/mixins/error_handler_mixin.dart';
 import '../bloc/lobby_bloc.dart';
-import '../../lobby_di.dart';
+import 'lobby_waiting_room_page.dart';
 
 class JoinLobbyPage extends StatefulWidget {
   final VoidCallback? onToggleTheme;
@@ -24,18 +24,16 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
   final TextEditingController _nameController = TextEditingController();
   int _selectedLobby = 0;
   int _selectedAvatar = 0;
-  late LobbyBloc _lobbyBloc;
   String? _selectedLobbyId;
 
   @override
   void initState() {
     super.initState();
-    _lobbyBloc = LobbyDI.getBloc();
     _loadLobbies();
   }
 
   void _loadLobbies() {
-    _lobbyBloc.add(DiscoverLocalLobbiesEvent());
+    context.read<LobbyBloc>().add(DiscoverLocalLobbiesEvent());
   }
 
   void _onLobbySelected(String lobbyId) {
@@ -55,7 +53,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
       return;
     }
 
-    _lobbyBloc.add(
+    context.read<LobbyBloc>().add(
       JoinLobbyEvent(
         _selectedLobbyId!,
         _nameController.text,
@@ -122,7 +120,6 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                 bottom: kBottomNavigationBarHeight,
               ),
               child: BlocConsumer<LobbyBloc, LobbyState>(
-                bloc: _lobbyBloc,
                 listener: (context, state) {
                   // Handle errors using the mixin
                   handleLobbyError(state);
@@ -131,7 +128,18 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                     showSuccessMessage(
                       'Successfully joined ${state.lobby.name}!',
                     );
-                    // Navigate to lobby waiting room or game
+                    // Navigate to lobby waiting room
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => LobbyWaitingRoomPage(
+                          lobby: state.lobby,
+                          currentPlayerId: _nameController.text, // TODO: Get actual player ID
+                          isHost: false,
+                          onToggleTheme: widget.onToggleTheme,
+                          isDarkMode: widget.isDarkMode,
+                        ),
+                      ),
+                    );
                   } else if (state is NetworkDisconnected) {
                     handleConnectionStatus(false, state.reason);
                   } else if (state is NetworkConnected) {
@@ -165,7 +173,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                           RealTimeLobbyDiscovery(
                             onLobbySelected: _onLobbySelected,
                             selectedLobbyId: _selectedLobbyId,
-                            lobbyBloc: _lobbyBloc,
+                            lobbyBloc: context.read<LobbyBloc>(),
                           ),
                           const SizedBox(height: 18),
                           // Player details
@@ -177,7 +185,7 @@ class _JoinLobbyPageState extends State<JoinLobbyPage> with ErrorHandlerMixin {
                           ),
                           const SizedBox(height: 18),
                           // Connection status
-                          ConnectionStatusIndicator(lobbyBloc: _lobbyBloc),
+                          ConnectionStatusIndicator(lobbyBloc: context.read<LobbyBloc>()),
                           const SizedBox(height: 18),
                           // Join button
                           PrimaryButton(

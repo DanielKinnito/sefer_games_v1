@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:sefer_games_v1/features/lobby/presentation/bloc/lobby_bloc.dart';
 import 'package:sefer_games_v1/features/lobby/data/repositories/lobby_repository_impl.dart';
+import 'package:sefer_games_v1/features/lobby/data/services/lan_service.dart';
 import 'package:sefer_games_v1/features/lobby/domain/usecases/create_lobby.dart';
 import 'package:sefer_games_v1/features/lobby/domain/usecases/join_lobby.dart';
 import 'package:sefer_games_v1/features/lobby/domain/usecases/get_available_lobbies.dart';
@@ -37,6 +38,7 @@ void main() {
         leaveLobby: leaveLobby,
         startHosting: startHosting,
         discoverLocalLobbies: discoverLocalLobbies,
+        lanService: LanService(),
       );
     });
 

@@ -13,10 +13,10 @@ import '../widgets/primary_button.dart';
 import '../widgets/real_time_player_list.dart';
 import '../widgets/connection_status_indicator.dart';
 import '../bloc/lobby_bloc.dart';
-import '../../lobby_di.dart';
 import '../../domain/entities/lobby.dart';
 import '../../../../core/game/game_base.dart';
 import '../../../games/presentation/pages/game_session_page.dart';
+import 'lobby_waiting_room_page.dart';
 
 
 class HostLobbyPage extends StatefulWidget {
@@ -32,14 +32,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
   final TextEditingController _lobbyNameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   int _selectedAvatar = 0;
-  late LobbyBloc _lobbyBloc;
   bool _isHosting = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _lobbyBloc = LobbyDI.getBloc();
-  }
 
   void _onCreatePressed() {
     if (_lobbyNameController.text.isEmpty || _nameController.text.isEmpty) {
@@ -51,7 +44,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
     final availableGames = GameRegistry.getAvailableGameTypes();
     final selectedGameType = availableGames.isNotEmpty ? availableGames.first : 'Unknown';
 
-    _lobbyBloc.add(CreateLobbyEvent(
+    context.read<LobbyBloc>().add(CreateLobbyEvent(
       _lobbyNameController.text,
       _nameController.text,
       'avatar_$_selectedAvatar',
@@ -122,7 +115,6 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
             // Main content fills available space above nav bar
             Expanded(
               child: BlocConsumer<LobbyBloc, LobbyState>(
-                bloc: _lobbyBloc,
                 listener: (context, state) {
                   // Handle errors using the mixin
                   handleLobbyError(state);
@@ -130,12 +122,24 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                   if (state is LobbyCreated) {
                     showSuccessMessage('Lobby "${state.lobby.name}" created successfully!');
                     // Automatically start hosting
-                    _lobbyBloc.add(StartHostingEvent(state.lobby.id));
+                    context.read<LobbyBloc>().add(StartHostingEvent(state.lobby.id));
                   } else if (state is LobbyHosting) {
                     setState(() {
                       _isHosting = true;
                     });
                     showSuccessMessage('Now hosting on ${state.hostAddress}');
+                    // Navigate to waiting room
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => LobbyWaitingRoomPage(
+                          lobby: state.lobby,
+                          currentPlayerId: state.lobby.hostId,
+                          isHost: true,
+                          onToggleTheme: widget.onToggleTheme,
+                          isDarkMode: widget.isDarkMode,
+                        ),
+                      ),
+                    );
                   } else if (state is PlayerJoined) {
                     handlePlayerEvent(state.playerName, true);
                   } else if (state is PlayerLeft) {
@@ -169,7 +173,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                                 onAvatarSelect: (i) => setState(() => _selectedAvatar = i),
                               ),
                               const SizedBox(height: 18),
-                              ConnectionStatusIndicator(lobbyBloc: _lobbyBloc),
+                              ConnectionStatusIndicator(lobbyBloc: context.read<LobbyBloc>()),
                               const SizedBox(height: 18),
                               if (_isHosting) ...[
                                 Card(
@@ -203,7 +207,7 @@ class _HostLobbyPageState extends State<HostLobbyPage> with ErrorHandlerMixin {
                                 ),
                                 const SizedBox(height: 18),
                                 // Real-time player list
-                                RealTimePlayerList(lobbyBloc: _lobbyBloc),
+                                RealTimePlayerList(lobbyBloc: context.read<LobbyBloc>()),
                                 const SizedBox(height: 18),
                                 // Start Game button (only show when hosting and have enough players)
                                 if (state is LobbyHosting && state.lobby.players.length >= 2)

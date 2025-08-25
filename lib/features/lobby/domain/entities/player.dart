@@ -4,6 +4,7 @@ abstract class Player {
   String get avatarId;
   bool get isHost;
   bool get isConnected;
+  bool get isReady;
   DateTime get joinedAt;
 }
 
@@ -19,6 +20,8 @@ class PlayerEntity implements Player {
   @override
   final bool isConnected;
   @override
+  final bool isReady;
+  @override
   final DateTime joinedAt;
 
   PlayerEntity({
@@ -27,6 +30,7 @@ class PlayerEntity implements Player {
     required this.avatarId,
     required this.isHost,
     required this.isConnected,
+    this.isReady = false,
     DateTime? joinedAt,
   }) : joinedAt = joinedAt ?? DateTime.now();
 
@@ -36,6 +40,7 @@ class PlayerEntity implements Player {
     String? avatarId,
     bool? isHost,
     bool? isConnected,
+    bool? isReady,
     DateTime? joinedAt,
   }) {
     return PlayerEntity(
@@ -44,6 +49,7 @@ class PlayerEntity implements Player {
       avatarId: avatarId ?? this.avatarId,
       isHost: isHost ?? this.isHost,
       isConnected: isConnected ?? this.isConnected,
+      isReady: isReady ?? this.isReady,
       joinedAt: joinedAt ?? this.joinedAt,
     );
   }
